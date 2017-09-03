@@ -1,3 +1,17 @@
+// 1)We created a function called SpacebookApp that wrapped the bulk of our code. 
+// We did this to create a function around our data and other functions that we don't 
+// want anyone else to access.
+// We returned a few of the functions in an object at the end of the SpacebookApp function. 
+// This is so our data can be interacted with outside of our SpacebookApp, but only by 
+// those functions.
+// To initialize our app we did this: var app = SpacebookApp();. From there, we 
+// could use the object app to interact with our methods.
+// Notice we put all our events at the bottom together. This just helps us organize 
+// them and keep everything clean and neat.
+// Notice our function _findPostById. It has a little _ in front of it because 
+// it's a "helper" function. In other words, it's only used by other functions
+//  inside module. By convention, you'll see people start these with an underscore.
+
 var SpacebookApp = function () {
   var posts = [];
 
