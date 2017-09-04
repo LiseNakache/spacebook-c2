@@ -19,7 +19,8 @@
 
 //global variables
 var posts = [];
-var number = 0;  // important de le mettre avant la fonction (donc dans le global scope). Si je le mets dans la fonction,
+var number = 0;
+// important de le mettre avant la fonction (donc dans le global scope). Si je le mets dans la fonction,
 // la variable number sera tjrs = à 0;
 
 //functions
@@ -28,82 +29,103 @@ $('.btn-primary').click(function () {
     var post = {
         text: name,
         id: number,
-        comments: [],
-        username: []
+        comments: []
+
     };
     number++;
     posts.push(post); // on utilise push car array !
-    adding();
-
+    addPost();
 })
 
 
-function adding() {
+function addPost() {
     $(".posts").find('p').remove(); // ici le off ne fonctionne pas : pk ?
     for (var i = 0; i < posts.length; i++) {
-        $('.posts').append('<p>' + posts[i].text + '</p>');
-        $('p').attr('data-id',posts[i].id );
+        $(".posts").append('<p>' + posts[i].text + '</p>');
+        $('p').attr('data-id', posts[i].id);
         $('p').addClass("post");
-        
-
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    var buttonSecond = '<input type="button" class="secondbnt" value="Remove the post"/>';
+    var buttonRemovePara = '<input type="button" class="removeparabnt" value="Remove the post"/>';
+    $('p').append(buttonRemovePara);
+    // qd on utilise append, le $('element') est PARENT
 
-    $('p').append(buttonSecond); // qd on utilise append, le $('element') est PARENT
+    $('.removeparabnt').click(function () {
 
-    $('.secondbnt').click(function () {
-        var postDiv = $(this).closest('p')
-        var postDivIndex = postDiv.index()
+        var indexPara = $(this).closest('p').index()
+        // le paragraphe proche de ce bnt= le paragraphe qu'on vient de créer
+        // [index()] donne la place de l'élément par rapport à l'objet {post}
 
-        postDiv.remove();
-        posts.splice(postDivIndex, 1); 
+        posts.splice(indexPara, 1);
+        $(this).closest('p').remove();
 
         // posts.pop('p');   won't work because remove the last item of the array, and not the one we press 
         // splice : pop l'item qu'on veut !
+        //array.splice(index, howmany, item1, ....., itemX)
     })
 
+    /////////////////////////////////////////////////////////////////////////////////////////////
     var buttonAddComment = '<input type="button" class="commentbtn" value="Add a Comment"/>'
     $('.post').append(buttonAddComment);
-
 
     $('.commentbtn').click(function () {
         var formComment = '<input type="text" class="comment-name" placeholder="Post Comment"/>'
         var usernameComment = '<input type="text" class="username-name" placeholder="Post Username"/>'
+
+        $(this).closest('.post').append('<div class="comment-form">' + '<br>' + formComment + '<br>' +
+            usernameComment + '<br>' +
+            '<input type="button" class="submitbtn" value="Submit the comment"/><div class="comments"></div></div>');
+    })
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+var addComment = function (newcomment, index, post) {
+    posts[index].comments.push(newcomment);
+
+    var comments = post.find('.comments')
+
+    // mettre le paragraphe sur la page(HTML) est en 2e position
+    comments.append('<div  class="comment" >' + '<br>' + "your comment: " + newcomment.text +
+        '<br>' + " your username: " + newcomment.user + '<br>'+
+        '<input type="button" class="removecommentbtn" value="Remove the comment"/>' +
+        '</div>');
+
+
+        $('.removecommentbtn').off();
+        $('.removecommentbtn').click(function () {
+            var post = $(this).closest('.post');
+            var i = post.index();
         
-        $(this).closest('.post').append('<br>' + formComment + '<br>' + usernameComment);
-            
-
-    })
-
-    var buttonSubmit = '<input type="button" class="submitbtn" value="Submit the comment"/>'
-    $('.post').append(buttonSubmit);
-
-    $('.submitbtn').click(function () {
-        var commentVal = $('.comment-name').val();
-        var usernameVal = $('.username-name').val();
-        $(this).closest('.post').append('<br>' + "your comment: " + commentVal + '<br>' + " your username: " + usernameVal);
-        posts.comments.splice(comments,null,commentVal);
-        posts.username.splice(username,null,usernameVal);
-    })
-
-    var buttonRemoveComment = '<input type="button" class="removecommentbtn" value="Remove the comment"/>'
-    $('.post').append(buttonRemoveComment);
-
-    $('.removecommentbtn').click(function () {
-        $(this).closest('.post').remove();
-        $(this).closest('.post').remove();
-    })
-
+            var comment = $(this).closest('.comment');
+            var j = comment.index();
+        
+            posts[i].comments.splice(j, 1);
+            comment.remove();
+        })
+        
 
 }
 
-alert('Heloooooo');
+$('.posts').on('click', ".submitbtn", function () {
+    var post = $(this).closest('.post')
+    var i = post.index();
+
+    var commentVal = $(this).siblings('.comment-name').val();
+    var usernameVal = $(this).siblings('.username-name').val();
+
+    var commentsObj = {
+        text: commentVal,
+        user: usernameVal
+    };
+    addComment(commentsObj, i, post)
+})
 
 
 
 
 
-//event bindings
+
+
 
