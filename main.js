@@ -21,8 +21,6 @@ $('.post').append(buttonAddComment);
 var buttonSubmitComment = '<input type="button" class="submit-comment" value="Submit the comment"/>'
 $('.post').append(buttonSubmitComment);
 
-var buttonRemoveComments = '<input type="button" class="remove-comment" value="Remove the comment"/>'
-$('.post').append(buttonRemoveComments);
 });
 
 
@@ -45,7 +43,7 @@ $('.posts').on('click','.remove-comment',function () {
 
 
 
-function obj (){
+function postObj (){
     var name = $('.form-control').val();
     var post = {
         text: name,
@@ -58,7 +56,7 @@ function obj (){
   
 var addPost = function () {
 // add posts to the array
-var createPost = obj();
+var createPost = postObj();
 posts.push(createPost);
 
 //add posts to the html
@@ -86,7 +84,7 @@ function formComments (b) {
         
 
         $(b).closest('.post').append('<div class="comment-form">' + '<br>' + formComment + 
-                                        '<br>' + usernameComment + '<br>' + '<div class="comments"></div>' + '</div>');
+                                        '<br>' + usernameComment + '<br>' + '<div class="comments"></div></div>');
 
                                                             
         $(b).hide();   
@@ -104,6 +102,9 @@ function addComment (c) {
         }
 
 //add comment to the array
+
+var removeCommentBtn = '<input type="button" class="remove-comment" value="Remove"/>'
+
         var post = $(c).closest('.post')
         var postIndex = post.index()
 
@@ -115,18 +116,19 @@ function addComment (c) {
 //add comment to the HTML
         commentsDiv.empty();
         for(i=0;i<commenting.length;i++) {
-        commentsDiv.append('<div>' + '<br>' + "your comment: " + commenting[i].text + '<br>' + " your username: " + commenting[i].user + '<br>'+ '</div>');
+        commentsDiv.append('<div class="comment">' + '<br>' + "your comment: " + commenting[i].text + '<br>' + " your username: " + commenting[i].user + '<br>'+ removeCommentBtn +'</div>');
 }
 
 
     };
 
+var k;
 var removeComment = function (d) {
 //remove comment from the array   
             // $('.removecommentbtn').off();    
             var post = $(d).closest('.post');
             var i = post.index();
-            var comment = post.find('.comments');
+            var comment = $(d).closest('.comment');
             var j = comment.index();
             posts[i].comments.splice(j, 1);
 
